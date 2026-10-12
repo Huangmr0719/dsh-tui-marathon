@@ -96,7 +96,7 @@ test('opening plays and closes while the asynchronous host session is not ready'
     await until(() => screen().includes('INTO THE UNKNOWN'))
     assert.ok(intervals.includes(16), 'backend readiness must not suspend the opening clock')
     offset = 3000
-    await until(() => Array.from({ length: term.rows }, (_, y) => Array.from({ length: term.cols }, (_, x) => term.buffer.active.getLine(term.buffer.active.baseY + y)?.getCell(x))).flat().some(cell => cell?.isBgRGB() && cell.getBgColor() === 0x19f017))
+    await until(() => Array.from({ length: term.rows }, (_, y) => Array.from({ length: term.cols }, (_, x) => term.buffer.active.getLine(term.buffer.active.baseY + y)?.getCell(x))).flat().some(cell => cell?.isFgRGB() && cell.getFgColor() === 0x19f017))
     offset = 10000
     await until(() => channel.pluginScene === undefined && screen().includes('RETURNED'))
     assert.equal(channel.ready, false, 'the host session remains independent of visual completion')

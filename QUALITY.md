@@ -5,8 +5,10 @@
 - Installed the official `dsh` CLI 0.2.0-rc.2 and dsh-TUI 0.14.0 commands, then added the theme to the normal `dsh-tui` profile with `dsh plugin --profile dsh-tui add`. The stock host source is unchanged.
 - Reproduced a startup stall through the actual `dsh-tui` command: the opening waited for an asynchronous channel's readiness and remained on its first frame. A new real-renderer regression failed before the fix and passed afterward. Opening motion and automatic close now follow the host clock independently of session readiness.
 - TypeScript build, all twelve automated tests and all sixty-three stock-host integration checks passed. The new test advances through visible scan frames and returns to the host while the session remains unready.
-- A 120×36 PTY run of the installed `dsh-tui` command produced 264 terminal paint buffers: opening, thicker green scan frames, all 4,320 cells red at the sweep peak, and the Acid Rain native landing page. No Braille or stock blue whale pixels were detected. Only onboarding dismissal and exit keys were sent; no prompt or model inference was submitted. Test credentials were process-local placeholders.
+- A 120×36 PTY run of the installed `dsh-tui` command produced 266 terminal paint buffers: opening, refined green scan frames, all 4,320 cells red at the sweep peak, and the Acid Rain native landing page. No Braille or stock blue whale pixels were detected. Only onboarding dismissal and exit keys were sent; no prompt or model inference was submitted. Test credentials were process-local placeholders.
 - Both READMEs now start with one theme-install command followed by normal `dsh-tui` startup. Source builds and `npm start` are confined to the development instructions. Raw local captures and profile files stay out of Git.
+- Refined the green scans to heavy box-drawing strokes after the solid half-row version proved too thick. The build, twelve tests and sixty-three integration checks passed again; a fresh default-launcher recording supplies the startup GIF in both READMEs.
+- The GIF replays real 120×36 ANSI output at 24 fps for 9.54 seconds (229 frames, about 663 KiB). It includes the scan and red panel exit, excludes the native page and personal paths, and preserves wall-clock timing. This presentation encoding is separate from live terminal frame cadence.
 
 ## 0.4.1 scan visibility
 

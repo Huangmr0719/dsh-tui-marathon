@@ -37,21 +37,20 @@ class Canvas {
       for (let col = Math.max(0, Math.round(x)); col < right; col++) this.put(col, row, ' ', color, color)
     }
   }
-  outline(x: number, y: number, w: number, h: number, color: number, aspect: number) {
+  outline(x: number, y: number, w: number, h: number, color: number) {
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h)
     if (w <= 0 || h <= 0) return
-    // Solid half-row strokes stay visible across fonts; match their physical width.
-    const stroke = Math.min(w, Math.max(1, Math.round(aspect / 2)))
-    this.rect(x, y, stroke, h, color)
-    this.rect(x + w - stroke, y, stroke, h, color)
-    for (let col = Math.max(0, x + stroke); col < Math.min(this.columns, x + w - stroke); col++) {
-      this.half(col, y, color, undefined)
-      const bottom = y + h - 1
-      if (bottom < 0 || bottom >= this.rows) continue
-      const i = bottom * this.columns + col
-      const topColor = this.chars[i] === '▀' ? this.fg[i] : this.bg[i]
-      this.half(col, bottom, topColor, color)
+    // Heavy box strokes keep the scan visible without filling half a text row.
+    for (let col = Math.max(0, x + 1); col < Math.min(this.columns, x + w - 1); col++) {
+      this.put(col, y, '━', color)
+      this.put(col, y + h - 1, '━', color)
     }
+    for (let row = Math.max(0, y + 1); row < Math.min(this.rows, y + h - 1); row++) {
+      this.put(x, row, '┃', color)
+      this.put(x + w - 1, row, '┃', color)
+    }
+    this.put(x, y, '┏', color); this.put(x + w - 1, y, '┓', color)
+    this.put(x, y + h - 1, '┗', color); this.put(x + w - 1, y + h - 1, '┛', color)
   }
   text(value: string, y: number, fg: number, bold = false) {
     const x = Math.floor((this.columns - value.length) / 2)
@@ -147,7 +146,7 @@ function opening(c: Canvas, t: number, reduced: boolean, aspect: number, drawLog
       if (t < [2350, 2450, 2550, 2750, 2650][i]) continue
       const v = clamp((t - 2860) / 2800), scale = 1 + (7 * (1 + (4 - i) * .3) - 1) * (.03 * v + .97 * v ** 6)
       const w = c.columns * ratios[i][0] * scale, h = c.rows * ratios[i][1] * scale
-      c.outline((c.columns - w) / 2, (c.rows - h) / 2, w, h, GREEN, aspect)
+      c.outline((c.columns - w) / 2, (c.rows - h) / 2, w, h, GREEN)
     }
   }
   if (t >= 6730 && !reduced) return

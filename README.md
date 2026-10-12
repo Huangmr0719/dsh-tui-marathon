@@ -4,7 +4,9 @@
 
 A Marathon-inspired appearance plugin for DeepSeek Harness TUI. Version 0.4.2 provides an Acid Rain theme and a responsive full-screen opening through the stock TUI's public interfaces. Conversations, models, tools and storage remain with Harness / dsh-TUI.
 
-![Opening scan frames rendered from terminal cells](evidence/scan-after-scan-120x36.png)
+![Startup animation captured from the installed dsh-tui](evidence/startup.gif)
+
+Actual 120×36 terminal output, replayed as a 24 fps GIF. The native interface returns after the opening.
 
 The repository is named `dsh-tui-marathon`; the installable Cordis package is `dsh-theme-mls-tui`.
 
@@ -41,7 +43,7 @@ dsh plugin --profile dsh-tui remove dsh-theme-mls-tui
 - Automatic animation runs only at startup. Successful turns, cancellations and history replay never open an animation.
 - Acid Rain yellow `#D7FF00`, dark surfaces and neutral body text. The opening retains electric blue, maze graphics and the red panel exit.
 - Actual terminal text, block glyphs, borders and solid color cells replace the old full-frame sampled renderer.
-- Green opening scan frames use solid half-row strokes, with vertical thickness matched to cell proportions for visibility across fonts.
+- Green opening scan frames use heavy box-drawing strokes for a visible, restrained line weight.
 - Both whale axes share one physical scale. Borders, maze and panels fill the viewport independently, including host page margins.
 - The host frame clock drives motion without the former 50ms quantization. Measured moving-frame output is approximately 58 fps; terminal and machine load affect results.
 - Resizing works during playback and pause. Validation covers 48–180 columns, 20–54 rows and several physical cell proportions.
