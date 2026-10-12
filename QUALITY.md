@@ -1,4 +1,12 @@
-# Validation · 2026-10-12 · 0.4.2
+# Validation · 2026-10-12 · 0.4.3
+
+## 0.4.3 scan timing and logo continuity
+
+- The accepted opening uses six scan frames with closer spacing and an extra 800ms of scan motion. The logo remains above the blue hold and maze transition until the red sweep covers it. The stock host source is unchanged; native conversation block reveal was deferred at the user's request.
+- Strict TypeScript build, all thirteen automated tests and all sixty-three stock-host integration checks passed. The added regression checks logo/title continuity across the former blank interval; viewport, aspect, pause, clock and full red coverage checks remain in place.
+- A fresh 120×36 PTY run of the installed `dsh-tui` preview produced 309 terminal paint buffers, full-screen corner coverage, all 4,320 cells red at the sweep peak and the Acid Rain native landing page. No Braille or stock blue whale pixels were detected. No prompt or model inference was submitted. Stable 0.4.3 retains the accepted preview's runtime code.
+- Both READMEs use the new GIF, replayed from that actual terminal recording at 24 fps for about 10.3 seconds (248 frames). Wall-clock timing is preserved; native pages, personal paths, credentials and raw capture files are excluded. GIF encoding cadence is separate from live terminal frame cadence.
+- Installation examples and package metadata now target the stable 0.4.3 release.
 
 ## 0.4.2 normal launcher
 

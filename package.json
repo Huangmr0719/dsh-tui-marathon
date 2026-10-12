@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-mls-tui",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Acid Rain appearance and a responsive opening for unmodified DeepSeek Harness TUI",
   "type": "module",
   "license": "MIT",

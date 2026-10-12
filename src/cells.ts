@@ -5,6 +5,7 @@ export const cellPalette = ['0;0;0', '77;108;254', '215;255;0', '255;0;60', '25;
 const BLACK = 0, BLUE = 1, ACID = 2, RED = 3, GREEN = 4
 const clamp = (v: number) => Math.max(0, Math.min(1, v))
 const ease = (v: number) => 1 - (1 - clamp(v)) ** 3
+export const openingTiming = { sweepStart: 7930, end: 10250 } as const
 
 export interface CellFrame {
   columns: number
@@ -129,27 +130,26 @@ function pixelZoom(c: Canvas, size: number, aspect: number) {
 }
 
 function opening(c: Canvas, t: number, reduced: boolean, aspect: number, drawLogo: boolean) {
-  if (t >= 5730 && !reduced) c.rect(0, 0, c.columns, c.rows, BLUE)
+  if (t >= 6530 && !reduced) c.rect(0, 0, c.columns, c.rows, BLUE)
   else if (!reduced) {
     const giant = Math.min(c.columns, c.rows * aspect) * 1.4
     if (t >= 1200 && t < 1450 && Math.floor((t - 1200) / 35) % 2 === 0) pixelZoom(c, giant, aspect)
     if (t >= 1850) {
-      const v = clamp((t - 2880) / 2850), scale = 1 + 39 * (.01 * v + .99 * v ** 30)
+      const v = clamp((t - 2880) / 3650), scale = 1 + 39 * (.01 * v + .99 * v ** 30)
       pixelZoom(c, giant * scale, aspect)
       if (t >= 3060) {
         const side = Math.max(2, c.columns * 80 / 1440 * scale)
         c.rect((c.columns - side) / 2, (c.rows - side / aspect) / 2, side, side / aspect, BLUE)
       }
     }
-    const ratios = [[.88, .65], [.642, .477], [.505, .375], [.415, .307], [.354, .261]]
+    const ratios = [[.88, .65], [.73, .54], [.61, .452], [.51, .378], [.43, .318], [.365, .27]]
     for (let i = 0; i < ratios.length; i++) {
-      if (t < [2350, 2450, 2550, 2750, 2650][i]) continue
-      const v = clamp((t - 2860) / 2800), scale = 1 + (7 * (1 + (4 - i) * .3) - 1) * (.03 * v + .97 * v ** 6)
+      if (t < 2350 + i * 120) continue
+      const v = clamp((t - 2860) / 3600), scale = 1 + (7 * (1 + (ratios.length - 1 - i) * .3) - 1) * (.03 * v + .97 * v ** 6)
       const w = c.columns * ratios[i][0] * scale, h = c.rows * ratios[i][1] * scale
       c.outline((c.columns - w) / 2, (c.rows - h) / 2, w, h, GREEN)
     }
   }
-  if (t >= 6730 && !reduced) return
   const { top, height } = openingLayout(c.columns, c.rows, aspect)
   if (drawLogo) logo(c, aspect)
   const title = Math.min(c.rows - 3, top + height + 1)
@@ -199,7 +199,7 @@ function maze(columns: number, rows: number): string[] {
   return pattern
 }
 
-function sweep(c: Canvas, t: number) {
+function sweep(c: Canvas, t: number, aspect: number) {
   const regions = panels(c.columns, c.rows), pattern = maze(c.columns, c.rows)
   for (const p of regions) {
     const order = p.order / (regions.length - 1)
@@ -209,7 +209,19 @@ function sweep(c: Canvas, t: number) {
     const dotAge = t - (400 + order * 600)
     c.rect(p.x, p.y, p.w, p.h, dotAge < 20 ? BLUE : BLACK)
     if (dotAge >= 20) for (let y = p.y; y < p.y + p.h; y++) for (let x = p.x; x < p.x + p.w; x++) c.put(x, y, pattern[y][x], BLUE)
-    if (age < 0) continue
+  }
+  // The central identity stays above the blue/maze stage until red covers it.
+  if (t < 1480) {
+    logo(c, aspect)
+    const { top, height } = openingLayout(c.columns, c.rows, aspect)
+    const title = Math.min(c.rows - 3, top + height + 1)
+    c.text(c.columns >= 20 ? 'DEEPSEEK HARNESS' : 'DEEPSEEK', title, ACID, true)
+    c.text(c.columns >= 20 ? 'INTO THE UNKNOWN' : 'UNKNOWN', title + 2, ACID)
+  }
+  for (const p of regions) {
+    const age = t - (900 + p.order / (regions.length - 1) * 500)
+    const exitAt = 580, exitSpan = 280
+    if (age < 0 || age >= exitAt + exitSpan) continue
     const amount = age < exitAt ? ease(age / 50) : 1 - ease((age - exitAt) / exitSpan)
     const width = Math.round(p.w * amount)
     if (age >= exitAt) c.rect(p.x, p.y, p.w, p.h, BLACK)
@@ -221,10 +233,10 @@ export function cellFrame(ms: number, columns: number, rows: number, reduced = f
   columns = Math.max(1, Math.floor(columns)); rows = Math.max(1, Math.floor(rows))
   const c = new Canvas(columns, rows), t = Math.max(0, ms)
   let phase: CellFrame['phase'] = 'clear'
-  if (reduced || t < 7130) {
+  if (reduced || t < openingTiming.sweepStart) {
     opening(c, t, reduced, resolveCellAspect(options.aspect), options.logo !== false); phase = 'opening'
-  } else if (t < 9400) {
-    sweep(c, t - 7130); phase = t < 8030 ? 'maze' : 'sweep'
+  } else if (t < openingTiming.end - 50) {
+    sweep(c, t - openingTiming.sweepStart, resolveCellAspect(options.aspect)); phase = t < openingTiming.sweepStart + 900 ? 'maze' : 'sweep'
   }
   return { columns, rows, lines: c.lines(), phase }
 }

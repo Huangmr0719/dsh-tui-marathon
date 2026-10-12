@@ -2,7 +2,7 @@ import type { TuiSceneProps, TuiSceneDescriptor } from '@deepseek-harness-tui/ds
 import { loadLogo, type LogoImage } from './image.js'
 import { Timeline } from './timeline.js'
 import { fullViewport } from './viewport.js'
-import { cellFrame } from './cells.js'
+import { cellFrame, openingTiming } from './cells.js'
 import { openingLayout, resolveCellAspect } from './geometry.js'
 
 export type GraphicsMode = 'cells' | 'auto'
@@ -34,7 +34,7 @@ export function createScene(options: SceneOptions): TuiSceneDescriptor['componen
     const time = timeline.current.read(clock, !paused)
     const at = reduced ? 0 : time
     const [image, setImage] = React.useState<LogoImage>()
-    const showImage = !reduced && options.graphics === 'auto' && images && image !== undefined && at < 6730
+    const showImage = !reduced && options.graphics === 'auto' && images && image !== undefined && at < openingTiming.sweepStart
 
     React.useEffect(() => { options.bind?.(channel) }, [channel])
     React.useEffect(() => { options.activateTheme?.(selectTheme) }, [selectTheme])
@@ -42,7 +42,7 @@ export function createScene(options: SceneOptions): TuiSceneDescriptor['componen
       if (channel.startupFailure !== undefined || options.motion === 'off') close()
     }, [channel.startupFailure, close])
     React.useEffect(() => {
-      if (time >= (reduced ? 650 : 9450)) close()
+      if (time >= (reduced ? 650 : openingTiming.end)) close()
     }, [time, close])
     React.useEffect(() => {
       if (options.graphics !== 'auto' || !images || reduced) return

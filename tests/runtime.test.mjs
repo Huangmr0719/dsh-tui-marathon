@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { Timeline } from '../dist/timeline.js'
 import { fullViewport } from '../dist/viewport.js'
-import { cellFrame } from '../dist/cells.js'
+import { cellFrame, openingTiming } from '../dist/cells.js'
 import { openingLayout, resolveCellAspect } from '../dist/geometry.js'
 import { loadLogo } from '../dist/image.js'
 
@@ -10,12 +10,12 @@ const plain = line => line.replace(/\x1b\[[0-9;]*m/g, '')
 
 test('native opening keeps readable text and exact cell bounds at every viewport and aspect', () => {
   for (const [cols, rows] of [[1, 1], [16, 8], [48, 20], [80, 24], [120, 36], [180, 54], [150, 20], [48, 44]]) {
-    for (const aspect of [1.5, 2, 2.4, 3]) for (const ms of [0, 1300, 2200, 3000, 5000, 6000, 7300, 8000, 8600, 9000, 9400]) {
+    for (const aspect of [1.5, 2, 2.4, 3]) for (const ms of [0, 1300, 2200, 3000, 5000, 6000, 7300, 7900, 8600, 9400, 9800, 10200]) {
       const frame = cellFrame(ms, cols, rows, false, { aspect })
       assert.equal(frame.lines.length, rows)
       assert.ok(frame.lines.every(line => plain(line).length === cols), 'each row has exactly the requested cell count')
       assert.ok(!/[\u2800-\u28ff]/u.test(frame.lines.join('')), 'no sampled Braille')
-      if (ms < 6730 && cols >= 20 && rows >= 20) {
+      if (ms < openingTiming.sweepStart && cols >= 20 && rows >= 20) {
         assert.equal(frame.lines.map(plain).join('\n').split('DEEPSEEK HARNESS').length - 1, 1)
         assert.ok(frame.lines.some(line => plain(line).includes('INTO THE UNKNOWN')))
       }
@@ -25,11 +25,19 @@ test('native opening keeps readable text and exact cell bounds at every viewport
 
 test('opening sweep covers the complete viewport and retreats in separate panels', () => {
   for (const [cols, rows] of [[48, 20], [80, 24], [120, 36], [180, 54]]) {
-    const frame = cellFrame(8600, cols, rows)
+    const frame = cellFrame(openingTiming.sweepStart + 1470, cols, rows)
     assert.ok(frame.lines.every(line => line === '\x1b[22;38;2;255;0;60;48;2;255;0;60m' + ' '.repeat(cols) + '\x1b[0m'))
-    const exit = cellFrame(8900, cols, rows).lines.join('')
+    const exit = cellFrame(openingTiming.sweepStart + 1770, cols, rows).lines.join('')
     assert.ok(exit.includes('255;0;60') && exit.includes('0;0;0'))
-    assert.ok(cellFrame(9400, cols, rows).lines.every(line => !line.includes('255;0;60')))
+    assert.ok(cellFrame(openingTiming.end, cols, rows).lines.every(line => !line.includes('255;0;60')))
+  }
+})
+
+test('logo survives the blue hold and maze entry until the red sweep arrives', () => {
+  for (const ms of [6500, 7130, 7530, 7900, 8000, 8400, 8800]) {
+    const text = cellFrame(ms, 120, 36).lines.map(plain).join('\n')
+    assert.ok(text.includes('DEEPSEEK HARNESS'), `title disappeared at ${ms}ms`)
+    assert.ok(text.includes('INTO THE UNKNOWN'), `identity disappeared at ${ms}ms`)
   }
 })
 
