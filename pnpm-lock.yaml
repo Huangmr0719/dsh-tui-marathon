@@ -1,0 +1,48 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      '@deepseek-ai/cordis':
+        specifier: link:../dsh-TUI/node_modules/@deepseek-ai/cordis
+        version: link:../dsh-TUI/node_modules/@deepseek-ai/cordis
+      '@deepseek-ai/schemastery':
+        specifier: link:../dsh-TUI/node_modules/@deepseek-ai/schemastery
+        version: link:../dsh-TUI/node_modules/@deepseek-ai/schemastery
+      '@deepseek-harness-tui/dsh-tui':
+        specifier: link:../dsh-TUI
+        version: link:../dsh-TUI
+      '@types/node':
+        specifier: 26.6.2
+        version: 26.6.2
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+packages:
+
+  '@types/node@26.6.2':
+    resolution: {integrity: sha512-X1P21scMv4zGKLYqjdGjaKa7COa0RKVYYZZN/NfvLQ1JegxFhdhpZG/Lyn8AXx6CDUavKAd11v6BvfpkDByK8g==}
+
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
+
+snapshots:
+
+  '@types/node@26.6.2':
+    dependencies:
+      undici-types: 8.9.0
+
+  typescript@6.0.3: {}
+
+  undici-types@8.9.0: {}

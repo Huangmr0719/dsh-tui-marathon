@@ -1,0 +1,11 @@
+- insert:
+    - id: theme-mls-tui
+      name: dsh-theme-mls-tui
+      inject: [tuiScenes, tuiThemes, tuiShortcuts]
+      config:
+        autoTheme: true
+        autoBoot: true
+        motion: full
+        graphics: cells
+        cellAspect: 0
+        nativeWhale: false

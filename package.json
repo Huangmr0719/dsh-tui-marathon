@@ -1,0 +1,69 @@
+{
+  "name": "dsh-theme-mls-tui",
+  "version": "0.4.1",
+  "description": "Acid Rain appearance and a responsive opening for unmodified DeepSeek Harness TUI",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Huangmr0719/dsh-tui-marathon.git"
+  },
+  "homepage": "https://github.com/Huangmr0719/dsh-tui-marathon#readme",
+  "bugs": {
+    "url": "https://github.com/Huangmr0719/dsh-tui-marathon/issues"
+  },
+  "keywords": ["deepseek", "deepseek-harness", "dsh-tui", "marathon", "theme", "terminal"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "dist",
+    "assets",
+    "themes",
+    "cordis.patch.yml",
+    "dsh-plugin.json",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "THIRD_PARTY.md",
+    "LICENSE-reference",
+    "LICENSE-DeepSeek",
+    "scripts/start.mjs",
+    "scripts/setup-local.mjs",
+    "QUALITY.md",
+    "COMPATIBILITY.md"
+  ],
+  "engines": {
+    "node": "^22.19 || >=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test tests/*.test.mjs",
+    "verify": "node scripts/verify-stock.mjs",
+    "pack:local": "npm --cache .runtime/npm-cache pack --ignore-scripts",
+    "start": "node scripts/start.mjs",
+    "setup:local": "node scripts/setup-local.mjs",
+    "measure:motion": "node scripts/measure-motion.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/schemastery": "^3.18.4",
+    "@deepseek-harness-tui/dsh-tui": "~0.14.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "link:../dsh-TUI/node_modules/@deepseek-ai/cordis",
+    "@deepseek-ai/schemastery": "link:../dsh-TUI/node_modules/@deepseek-ai/schemastery",
+    "@deepseek-harness-tui/dsh-tui": "link:../dsh-TUI",
+    "@types/node": "26.6.2",
+    "typescript": "6.0.3"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "packageManager": "pnpm@11.21.0"
+}

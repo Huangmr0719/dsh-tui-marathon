@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-12",
+  "backend": "deterministic fixture; stock clock and renderer",
+  "results": [
+    {
+      "columns": 120,
+      "rows": 36,
+      "requestedInterval": 50,
+      "elapsedMs": 9561,
+      "clockUpdates": 182,
+      "effectiveClockFps": 18.96,
+      "medianIntervalMs": 50.51,
+      "p95IntervalMs": 66.56,
+      "terminalPaints": 98,
+      "motionPaintFps": 18.37
+    },
+    {
+      "columns": 180,
+      "rows": 54,
+      "requestedInterval": 50,
+      "elapsedMs": 9541,
+      "clockUpdates": 178,
+      "effectiveClockFps": 18.57,
+      "medianIntervalMs": 51.15,
+      "p95IntervalMs": 66.1,
+      "terminalPaints": 92,
+      "motionPaintFps": 18.07
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "path": "deepseek.svg",
+      "origin": "local-official-Harness-checkout",
+      "project": "DeepSeek Harness",
+      "sourcePath": "apps/web/public/favicon.svg",
+      "upstream": "https://github.com/deepseek-ai/deepseek-harness",
+      "license": "MIT",
+      "licenseFile": "../LICENSE-DeepSeek",
+      "trademarkNotice": "DeepSeek brand mark; no trademark license is asserted.",
+      "bytes": 3634,
+      "sha256": "9e983b4f649c25c6ca0623a50be1a6e705fd8f49f756638b980fa13b40575ab6"
+    },
+    {
+      "path": "blue-pixel.png",
+      "source": "https://github.com/ALPDM00/dsh-theme-mls-desktop/blob/main/assets/boot/blue-pixel.png",
+      "gitBlob": "a7c63184c717f9334e62ef01f7ab68968b500ec8",
+      "bytes": 2597,
+      "sha256": "6e0c966a6289bddd212c90970c846e4eee24ebeab574760a293661ac52789694",
+      "modified": false,
+      "licenseFile": "../LICENSE-reference"
+    },
+    {
+      "path": "logo.rgba.gz",
+      "derivedFrom": "deepseek.svg",
+      "generator": "scripts/build-cell-assets.cjs",
+      "dimensions": [
+        256,
+        256
+      ],
+      "color": "#D7FF00",
+      "sha256": "b9e8dbe62d0081aea34b9513743d030882b3ab15bd0441aa97ba5a4a244e3263"
+    }
+  ]
+}
