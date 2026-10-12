@@ -2,11 +2,39 @@
 
 [简体中文](README.zh-CN.md)
 
-A Marathon-inspired appearance plugin for DeepSeek Harness TUI. Version 0.4.1 provides an Acid Rain theme and a responsive full-screen opening through the stock TUI's public interfaces. Conversations, models, tools and storage remain with Harness / dsh-TUI.
+A Marathon-inspired appearance plugin for DeepSeek Harness TUI. Version 0.4.2 provides an Acid Rain theme and a responsive full-screen opening through the stock TUI's public interfaces. Conversations, models, tools and storage remain with Harness / dsh-TUI.
 
 ![Opening scan frames rendered from terminal cells](evidence/scan-after-scan-120x36.png)
 
 The repository is named `dsh-tui-marathon`; the installable Cordis package is `dsh-theme-mls-tui`.
+
+## Install, then run dsh-tui
+
+This assumes `dsh`, `dsh-tui` and pnpm are already installed and your existing `dsh-tui` starts successfully. Supported host: dsh-TUI 0.14.x; verified version: 0.14.0.
+
+Install the theme once:
+
+```sh
+dsh plugin --profile dsh-tui add https://github.com/Huangmr0719/dsh-tui-marathon/releases/download/v0.4.2/dsh-theme-mls-tui-0.4.2.tgz
+```
+
+Keep using your usual command afterward:
+
+```sh
+dsh-tui
+```
+
+The plugin joins the launcher's default `dsh-tui` profile, selects Acid Rain and plays the opening automatically. No source checkout, host build or project-directory launch is needed. If you set `DSH_HOME`, use the same value during installation and startup. Restart `dsh-tui` after configuration changes or updates.
+
+First-time host users can complete its normal credential setup after the opening. The theme does not change model, credential or session configuration.
+
+Alternatively, download [the v0.4.2 archive](https://github.com/Huangmr0719/dsh-tui-marathon/releases/download/v0.4.2/dsh-theme-mls-tui-0.4.2.tgz) and replace the URL above with its local file path.
+
+To remove the theme and keep using `dsh-tui`:
+
+```sh
+dsh plugin --profile dsh-tui remove dsh-theme-mls-tui
+```
 
 ## Appearance and compatibility
 
@@ -21,25 +49,6 @@ The repository is named `dsh-tui-marathon`; the installable Cordis package is `d
 The stock pixel whale has hardcoded blue pixels. The plugin hides it through public `setWhale(false)`, keeps the themed native title and restores the previous preference on unload. Set `nativeWhale: true` to retain that sprite.
 
 Stock `tuiScenes` replaces the conversation. Panel masks animate within the plugin scene; the original conversation returns on close. Progressive reveal of native content needs an additional host interface. See [COMPATIBILITY.md](COMPATIBILITY.md).
-
-## Install
-
-Use Node `^22.19 || >=24`, the Harness CLI, and a Harness profile that already includes `@deepseek-harness-tui/dsh-tui` 0.14.x. Download [the v0.4.1 plugin archive](https://github.com/Huangmr0719/dsh-tui-marathon/releases/download/v0.4.1/dsh-theme-mls-tui-0.4.1.tgz), then run from the download directory:
-
-```sh
-dsh plugin --profile dsh-tui add ./dsh-theme-mls-tui-0.4.1.tgz
-dsh --profile dsh-tui
-```
-
-Replace `dsh-tui` with your profile name. No host patch or recompilation is required.
-
-For an existing source checkout that has completed the development setup below:
-
-```sh
-npm start
-```
-
-The official Harness CLI uses isolated development configuration and sessions in ignored `.runtime/`. Restart after source changes.
 
 ## Controls and configuration
 
@@ -56,17 +65,9 @@ The official Harness CLI uses isolated development configuration and sessions in
 
 No terminal brand is required. If the host supplies no pixel metrics, arbitrary font proportions cannot be inferred exactly. Optional `cellAspect` calibration uses cell height / width, such as `1.8` or `2.2`. Native cell rendering needs no image protocol.
 
-```sh
-MLS_GRAPHICS=auto npm start
-MLS_CELL_ASPECT=2.2 npm start
-MLS_NATIVE_WHALE=1 npm start
-MLS_MOTION=reduced npm start
-npm start -- --inline
-```
-
 ## Development
 
-Source development uses Node `^22.19 || >=24` and pnpm `11.21.0`. Keep a stock `dsh-TUI/` checkout next to this repository for dev links and integration tests. The revision below is the verified host baseline:
+These steps are for source changes; theme installation does not require them. Source development uses Node `^22.19 || >=24` and pnpm `11.21.0`. Keep a stock `dsh-TUI/` checkout next to this repository for dev links and integration tests. The revision below is the verified host baseline:
 
 ```sh
 git clone https://github.com/ccch1mneyyy/dsh-TUI.git
@@ -81,7 +82,17 @@ npm test
 npm run verify
 ```
 
-For an interactive run, `npm run setup:local` installs the official Harness CLI into ignored `.runtime/`; then run `npm start`. Configure API credentials through your shell environment as required by Harness. Do not commit credentials or sessions. Model-free tests need no API key.
+For interactive development, `npm run setup:local` installs the official Harness CLI into ignored `.runtime/`; then run `npm start`. That launcher uses isolated development configuration and sessions. Normal use follows the `dsh-tui` workflow above. Configure API credentials through your shell environment as required by Harness. Do not commit credentials or sessions. Model-free tests need no API key.
+
+Environment variables for the development launcher:
+
+```sh
+MLS_GRAPHICS=auto npm start
+MLS_CELL_ASPECT=2.2 npm start
+MLS_NATIVE_WHALE=1 npm start
+MLS_MOTION=reduced npm start
+npm start -- --inline
+```
 
 Optional development commands:
 

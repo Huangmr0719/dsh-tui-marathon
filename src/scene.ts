@@ -27,9 +27,11 @@ export function createScene(options: SceneOptions): TuiSceneDescriptor['componen
     const images = useTerminalImages(options.motion !== 'off' && (options.graphics === 'auto' || !options.cellAspect))
     const aspect = resolveCellAspect(options.cellAspect, useTerminalImageCellSize())
     const reduced = options.motion !== 'full'
-    const [ref, clock] = useAnimationFrame(paused || !channel.ready || options.motion === 'off' ? null : reduced ? 100 : 16)
+    // Session startup is asynchronous in the normal dsh-tui launcher. Visual
+    // motion must keep ticking even before that channel reports readiness.
+    const [ref, clock] = useAnimationFrame(paused || options.motion === 'off' ? null : reduced ? 100 : 16)
     const timeline = React.useRef(new Timeline())
-    const time = timeline.current.read(clock, channel.ready && !paused)
+    const time = timeline.current.read(clock, !paused)
     const at = reduced ? 0 : time
     const [image, setImage] = React.useState<LogoImage>()
     const showImage = !reduced && options.graphics === 'auto' && images && image !== undefined && at < 6730
@@ -40,8 +42,8 @@ export function createScene(options: SceneOptions): TuiSceneDescriptor['componen
       if (channel.startupFailure !== undefined || options.motion === 'off') close()
     }, [channel.startupFailure, close])
     React.useEffect(() => {
-      if (channel.ready && time >= (reduced ? 650 : 9450)) close()
-    }, [time, channel.ready, close])
+      if (time >= (reduced ? 650 : 9450)) close()
+    }, [time, close])
     React.useEffect(() => {
       if (options.graphics !== 'auto' || !images || reduced) return
       let active = true

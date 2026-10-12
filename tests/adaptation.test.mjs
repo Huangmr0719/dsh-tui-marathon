@@ -65,6 +65,44 @@ test('stock scene consumes measured geometry, follows the host clock and never c
   } finally { app.unmount(); runtime.unsub(); await runtime.root.fiber.dispose(); term.dispose() }
 })
 
+test('opening plays and closes while the asynchronous host session is not ready', async () => {
+  process.env.HOME = await mkdtemp(join(tmpdir(), 'mls-async-start-'))
+  process.env.USERPROFILE = process.env.HOME
+  process.env.NODE_ENV = 'production'
+  process.env.DSH_TUI_ADAPTER_MODE = 'new'
+  process.env.FORCE_COLOR = '3'
+  const { activate, makeTerminal, until } = await import('../scripts/harness.mjs')
+  const runtime = await activate({ motion: 'full', graphics: 'cells' })
+  const { React, ui, channel, scenes } = runtime
+  channel.ready = false
+  const { stdout, stdin, term, screen } = await makeTerminal(80, 24)
+  const intervals = []
+  let offset = 0
+  const clockUi = { ...ui,
+    useAnimationFrame(interval) {
+      intervals.push(interval)
+      const [ref, clock] = ui.useAnimationFrame(interval)
+      return [ref, clock + offset]
+    },
+  }
+  const h = React.createElement
+  function Scene() {
+    React.useSyncExternalStore(channel.subscribe, () => channel.version)
+    const descriptor = scenes.list().find(scene => scene.id === channel.pluginScene?.id)
+    return descriptor ? h(descriptor.component, { React, ui: clockUi, channel, close: channel.closePluginScene }) : h(ui.Text, null, 'RETURNED')
+  }
+  const app = await ui.render(h(ui.ThemeProvider, { theme: 'mls:terminal', themeHost: runtime.themes }, h(Scene)), { stdout, stdin, stderr: stdout, patchConsole: false, exitOnCtrlC: false })
+  try {
+    await until(() => screen().includes('INTO THE UNKNOWN'))
+    assert.ok(intervals.includes(16), 'backend readiness must not suspend the opening clock')
+    offset = 3000
+    await until(() => Array.from({ length: term.rows }, (_, y) => Array.from({ length: term.cols }, (_, x) => term.buffer.active.getLine(term.buffer.active.baseY + y)?.getCell(x))).flat().some(cell => cell?.isBgRGB() && cell.getBgColor() === 0x19f017))
+    offset = 10000
+    await until(() => channel.pluginScene === undefined && screen().includes('RETURNED'))
+    assert.equal(channel.ready, false, 'the host session remains independent of visual completion')
+  } finally { app.unmount(); runtime.unsub(); await runtime.root.fiber.dispose(); term.dispose() }
+})
+
 test('native host header resolves both plugin palettes into Acid Rain rather than falling back to blue', async () => {
   const { activate, makeTerminal, hostImport, until } = await import('../scripts/harness.mjs')
   const { LogoV2 } = await hostImport('components/LogoV2.js')
