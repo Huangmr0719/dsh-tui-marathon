@@ -4,6 +4,8 @@
 
 A Marathon-inspired appearance plugin for DeepSeek Harness TUI. Version 0.4.3 provides an Acid Rain theme and a responsive full-screen opening through the stock TUI's public interfaces. Conversations, models, tools and storage remain with Harness / dsh-TUI.
 
+**Inspired by the repo [ALPDM00/dsh-theme-mls-desktop](https://github.com/ALPDM00/dsh-theme-mls-desktop)**
+
 ![Startup animation captured from the installed dsh-tui](evidence/startup.gif)
 
 Version 0.4.3: actual 120×36 terminal output, replayed as a 24 fps GIF (about 10.3 seconds). The logo stays visible through the blue hold and maze transition until the red sweep covers it. The native interface returns after the opening.
