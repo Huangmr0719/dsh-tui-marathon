@@ -4,6 +4,8 @@
 
 受《马拉松》视觉风格启发的 DeepSeek Harness TUI 外观插件。0.4.3 通过原版 TUI 的公开接口提供酸雨黄主题与全屏开场。宿主源码、对话、模型、工具和会话存储均由现有 Harness / dsh-TUI 管理。
 
+收到GitHub仓库[ALPDM00/dsh-theme-mls-desktop](https://github.com/ALPDM00/dsh-theme-mls-desktop)的启发
+
 ![已安装 dsh-tui 的启动动画实录](evidence/startup.gif)
 
 0.4.3 版实际 120×36 终端输出，以 24 帧/秒 GIF 回放，约 10.3 秒。Logo 在蓝色停留和迷宫过渡期间保持显示，直到红扫将其覆盖；开场结束后返回原生界面。
